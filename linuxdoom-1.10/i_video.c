@@ -107,13 +107,57 @@ void I_StartFrame (void)
 {
 }
 
+int sdl_to_doom_keycode(SDL_Keycode key) {
+    if (key == SDLK_RIGHT)	return KEY_RIGHTARROW;
+    if (key == SDLK_LEFT)	return KEY_LEFTARROW;
+    if (key == SDLK_UP)		return KEY_UPARROW;
+    if (key == SDLK_DOWN)	return KEY_DOWNARROW;
+    if (key == SDLK_ESCAPE)	return KEY_ESCAPE;
+    if (key == SDLK_RETURN)	return KEY_ENTER;
+    if (key == SDLK_TAB)	return KEY_TAB;
+    if (key == SDLK_F1)		return KEY_F1;
+    if (key == SDLK_F2)		return KEY_F2;
+    if (key == SDLK_F3)		return KEY_F3;
+    if (key == SDLK_F4)		return KEY_F4;
+    if (key == SDLK_F5)		return KEY_F5;
+    if (key == SDLK_F6)		return KEY_F6;
+    if (key == SDLK_F7)		return KEY_F7;
+    if (key == SDLK_F8)		return KEY_F8;
+    if (key == SDLK_F9)		return KEY_F9;
+    if (key == SDLK_F10)	return KEY_F10;
+    if (key == SDLK_F11)	return KEY_F11;
+    if (key == SDLK_F12)	return KEY_F12;
+    if (key == SDLK_BACKSPACE) return KEY_BACKSPACE;
+    if (key == SDLK_PAUSE)	return KEY_PAUSE;
+    if (key == SDLK_EQUALS)	return KEY_EQUALS;
+    if (key == SDLK_MINUS)	return KEY_MINUS;
+    if (key == SDLK_RSHIFT)	return KEY_RSHIFT;
+    if (key == SDLK_LSHIFT)	return KEY_RSHIFT;
+    if (key == SDLK_RCTRL)	return KEY_RCTRL;
+    if (key == SDLK_LCTRL)	return KEY_RCTRL;
+    if (key == SDLK_RALT)	return KEY_RALT;
+    if (key == SDLK_LALT)	return KEY_LALT;
+	if (key >= ' ' && key <= '~') return key;
+	return 0;
+}
+
 void I_StartTic (void)
 {
-	SDL_Event e;
+	SDL_Event sdl_ev;
+    event_t d_ev;
 
-	while (SDL_PollEvent(&e)) {
-		if (e.type == SDL_KEYDOWN)
-			I_Quit();
+	while (SDL_PollEvent(&sdl_ev)) {
+		if (sdl_ev.type == SDL_KEYDOWN) {
+            d_ev.type = ev_keydown;
+            if ((d_ev.data1 = sdl_to_doom_keycode(sdl_ev.key.keysym.sym)))
+				D_PostEvent(&d_ev);
+        }
+		if (sdl_ev.type == SDL_KEYUP) {
+            d_ev.type = ev_keyup;
+            d_ev.data1 = sdl_to_doom_keycode(sdl_ev.key.keysym.sym);
+            if ((d_ev.data1 = sdl_to_doom_keycode(sdl_ev.key.keysym.sym)))
+				D_PostEvent(&d_ev);
+        }
 	}
 }
 

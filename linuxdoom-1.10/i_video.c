@@ -91,11 +91,9 @@ static int	multiply=1;
 
 
 #include <SDL2/SDL.h>
-#include <time.h>
 
 SDL_Window *window;
-uint64_t start_time;
-uint8_t current_palette[256 * 3];
+uint32_t current_palette[256];
 SDL_Surface *screen_surface;
 
 void I_ShutdownGraphics(void)
@@ -109,19 +107,14 @@ void I_StartFrame (void)
 {
 }
 
-void I_GetEvent(void)
+void I_StartTic (void)
 {
 	SDL_Event e;
 
-	printf("I_GetEvent called\n");
 	while (SDL_PollEvent(&e)) {
 		if (e.type == SDL_KEYDOWN)
 			I_Quit();
 	}
-}
-
-void I_StartTic (void)
-{
 }
 
 
@@ -131,15 +124,8 @@ void I_UpdateNoBlit (void)
 
 void I_FinishUpdate (void)
 {
-	if (time(0) - start_time > 3) I_Quit();
-	int num_pixels = SCREENWIDTH * SCREENHEIGHT;
-	for (int i = 0; i < num_pixels; i++) {
-		uint32_t px;
-		memcpy(&px, current_palette + screens[0][i] * 3, 3);
-		px = (px >> 16 & 0xff) |
-			(px & 0xff00) |
-			(px & 0xff) << 16;
-		((uint32_t*)screen_surface->pixels)[i] = px;
+	for (int i = 0; i < SCREENWIDTH * SCREENHEIGHT; i++) {
+		((uint32_t*)screen_surface->pixels)[i] = current_palette[screens[0][i]];
 	}
 	SDL_UpdateWindowSurface(window);
 
@@ -153,13 +139,17 @@ void I_ReadScreen (byte* scr)
 
 void I_SetPalette (byte* palette)
 {
-	memcpy(current_palette, palette, sizeof(current_palette));
+    for (int i = 0; i < 256; i++) {
+		current_palette[i] =
+            *palette++ << 16 |
+            *palette++ << 8 |
+            *palette++;
+    }
 }
 
 
 void I_InitGraphics(void)
 {
-	start_time = time(0);
     SDL_Init(SDL_INIT_EVERYTHING);
 
     window = SDL_CreateWindow( "DOOM",

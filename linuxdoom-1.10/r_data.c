@@ -538,6 +538,7 @@ void R_InitTextures (void)
 	{
 	    patch->originx = SHORT(mpatch->originx);
 	    patch->originy = SHORT(mpatch->originy);
+	    //printf("\npatch: %d\n", mpatch->patch); // Wrong value when compiled in 64bit, segfault, why?
 	    patch->patch = patchlookup[SHORT(mpatch->patch)];
 	    if (patch->patch == -1)
 	    {

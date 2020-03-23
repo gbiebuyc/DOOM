@@ -7,8 +7,7 @@
 CC=  gcc -m32  # gcc or g++
 
 CFLAGS=-g -Wall -DNORMALUNIX -DLINUX `sdl2-config --cflags` # -DUSEASM 
-LDFLAGS=-L/usr/X11R6/lib
-LIBS=-lXext -lX11 -lnsl -lm `sdl2-config --libs`
+LIBS= -lm `sdl2-config --libs`
 
 # subdirectory for objects
 O=linux

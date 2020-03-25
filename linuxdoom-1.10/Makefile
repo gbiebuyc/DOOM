@@ -4,7 +4,7 @@
 #
 # $Log:$
 #
-CC=  gcc -m32  # gcc or g++
+CC=  gcc # gcc or g++
 
 CFLAGS=-g -Wall -DNORMALUNIX -DLINUX `sdl2-config --cflags` # -DUSEASM 
 LIBS= -lm `sdl2-config --libs`

@@ -6,7 +6,7 @@
 #
 CC=  gcc # gcc or g++
 
-CFLAGS=-g -Wall -DNORMALUNIX -DLINUX `sdl2-config --cflags` # -DUSEASM 
+CFLAGS=-g -Wall -DNORMALUNIX `sdl2-config --cflags` # -DUSEASM
 LIBS= -lm `sdl2-config --libs`
 
 # subdirectory for objects
